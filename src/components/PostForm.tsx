@@ -1,71 +1,102 @@
 "use client";
-
 import { useState } from "react";
+import { Post } from "@/types/post";
+import { usePostStore } from "@/store/usePostStore";
 import { useRouter } from "next/navigation";
-import { PostFormProps, Post } from "@/types/post";
+import Link from "next/link";
 
-export default function PostForm({ initialPost, isNewPost }: PostFormProps) {
+type PostFormProps = {
+  initialPost: Post;
+  isNewPost: boolean;
+  onDelete?: () => void;
+};
+
+export default function PostForm({ initialPost, isNewPost, onDelete }: PostFormProps) {
+  const [title, setTitle] = useState(initialPost.title);
+  const [body, setBody] = useState(initialPost.body);
+  const [errors, setErrors] = useState<{ title?: string; body?: string }>({});
+  const { addPost, updatePost, deletePost, lastId } = usePostStore();
   const router = useRouter();
-  const [post, setPost] = useState<Post>(initialPost);
-  const [isEdited, setIsEdited] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setPost((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    setIsEdited(true);
+  const validate = () => {
+    const newErrors: { title?: string; body?: string } = {};
+
+    if (!title.trim() || title.length < 3) {
+      newErrors.title = "Title must be at least 3 characters long";
+    }
+
+    if (!body.trim() || body.length < 5) {
+      newErrors.body = "Body must be at least 5 characters long";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleSave = () => {
-    alert(`Post ${isNewPost ? "created" : "updated"} with success!\n\n` + JSON.stringify(post, null, 2));
-    setIsEdited(false);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validate()) return;
+
+    const post: Post = {
+      id: isNewPost ? lastId + 1 : initialPost.id,
+      title: title.trim(),
+      body: body.trim(),
+    };
+
+    if (isNewPost) {
+      addPost(post);
+    } else {
+      updatePost(initialPost.id, { title, body });
+    }
+
     router.push("/");
   };
 
   const handleDelete = () => {
-    const confirmDelete = confirm("Are you sure you want to delete this post?");
-    if (confirmDelete) {
-      alert("Post successfully deleted!");
-      router.push("/");
-    }
+    deletePost(initialPost.id);
+    if (onDelete) onDelete();
+    router.push("/"); 
   };
 
   return (
-    <div className="bg-white p-6 shadow rounded-lg">
-      <label className="block mb-2">
-        <span className="text-gray-700">Title</span>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
         <input
           type="text"
-          name="title"
-          value={post.title}
-          onChange={handleChange}
-          className="w-full mt-1 p-2 border rounded"
-          placeholder="Post Title..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Title"
+          className={`w-full p-2 border rounded ${errors.title ? "border-red-500" : "border-gray-300"}`}
         />
-      </label>
-      <label className="block mb-2">
-        <span className="text-gray-700">Body</span>
-        <textarea
-          name="body"
-          value={post.body}
-          onChange={handleChange}
-          className="w-full mt-1 p-2 border rounded"
-          placeholder="Post body..."
-        />
-      </label>
-
-      <div className="flex justify-between mt-4">
-
-        {!isNewPost && (
-          <button onClick={handleDelete} className="bg-red-500 text-white p-2 rounded">
-            Delete Post
-          </button>
-        )}
-
-        {isEdited && (
-          <button onClick={handleSave} className="bg-blue-500 text-white p-2 rounded mt-2">
-            Save
-          </button>
-        )}
+        {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
       </div>
-    </div>
+
+      <div>
+        <textarea
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          placeholder="Body"
+          className={`w-full h-40 p-2 border rounded ${errors.body ? "border-red-500" : "border-gray-300"}`}
+        />
+        {errors.body && <p className="text-red-500 text-sm mt-1">{errors.body}</p>}
+      </div>
+
+      <div className="flex w-full justify-between items-center">
+        {!isNewPost && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="px-4 py-2 bg-red-500 text-white rounded"
+          >
+            Delete
+          </button>
+        )
+        }
+        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+          {isNewPost ? "Create Post" : "Update Post"}
+        </button>
+      </div>
+    </form>
   );
 }

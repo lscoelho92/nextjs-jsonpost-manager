@@ -11,9 +11,10 @@ export async function getPosts(): Promise<Post[]> {
   return res.json();
 }
 
-export async function getPost(id: string) {
-  const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
-  await simulateDelay(2000);
-  if (!res.ok) throw new Error("Error when searching for post");
-  return res.json();
-}
+// TODO: Add a getPost to get specific post from API.
+// export async function getPost(id: string) {
+//   const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
+//   await simulateDelay(2000);
+//   if (!res.ok) throw new Error("Error when searching for post");
+//   return res.json();
+// }
