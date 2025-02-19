@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Post } from "@/types/post";
 import { usePostStore } from "@/store/usePostStore";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 type PostFormProps = {
   initialPost: Post;
@@ -15,7 +14,7 @@ export default function PostForm({ initialPost, isNewPost, onDelete }: PostFormP
   const [title, setTitle] = useState(initialPost.title);
   const [body, setBody] = useState(initialPost.body);
   const [errors, setErrors] = useState<{ title?: string; body?: string }>({});
-  const { addPost, updatePost, deletePost, lastId } = usePostStore();
+  const { addPost, updatePost, lastId } = usePostStore();
   const router = useRouter();
 
   const validate = () => {
@@ -53,12 +52,6 @@ export default function PostForm({ initialPost, isNewPost, onDelete }: PostFormP
     router.push("/");
   };
 
-  const handleDelete = () => {
-    deletePost(initialPost.id);
-    if (onDelete) onDelete();
-    router.push("/"); 
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -86,7 +79,7 @@ export default function PostForm({ initialPost, isNewPost, onDelete }: PostFormP
         {!isNewPost && (
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={onDelete}
             className="px-4 py-2 bg-red-500 text-white rounded"
           >
             Delete

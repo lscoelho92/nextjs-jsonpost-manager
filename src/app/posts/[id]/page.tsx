@@ -1,8 +1,14 @@
 import PostPageClient from "@/components/PostPageClient";
 
+type PostPageProps = {
+  params: Promise<{ id: string }>;
+};
+
 // Server Component
-export default function PostPage({ params }: { params: { id: string } }) {
+export default async function PostPage({ params }: PostPageProps) {
+  const resolvedParams = await params;
+
   return (
-    <PostPageClient id={params.id} />
+    <PostPageClient id={resolvedParams.id} />
   );
 }

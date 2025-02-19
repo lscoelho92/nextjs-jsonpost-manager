@@ -4,6 +4,7 @@ import { usePostStore } from "@/store/usePostStore";
 import { Post } from "@/types/post"
 import { useRouter } from "next/navigation";
 import PostForm from "@/components/PostForm";
+import ConfirmModal from "@/components/ConfirmModal";
 
 type PostPageProps = {
   id: string;
@@ -14,6 +15,7 @@ export default function PostPageClient({ id }: PostPageProps) {
   const router = useRouter();
   const [post, setPost] = useState<Post | null>(null);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const isNewPost = id === "new"
 
@@ -30,6 +32,23 @@ export default function PostPageClient({ id }: PostPageProps) {
     }
   }, [id, isNewPost, posts, router, isDeleted]);
 
+  const handleDeleteClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (post) {
+      setIsDeleted(true)
+      usePostStore.getState().deletePost(post.id); 
+    }
+    setIsModalOpen(false);
+    router.push("/");
+  };
+
+  const handleDeleteCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <main className="max-w-lg mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">
@@ -41,9 +60,15 @@ export default function PostPageClient({ id }: PostPageProps) {
         <PostForm 
           initialPost={post ?? { id: 0, title: "", body: "" }} 
           isNewPost={isNewPost} 
-          onDelete={() => setIsDeleted(true)}
+          onDelete={handleDeleteClick}
         />
       )}
+
+      <ConfirmModal 
+        isOpen={isModalOpen}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
     </main>
   )
 }
