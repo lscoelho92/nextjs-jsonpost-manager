@@ -1,24 +1,40 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePostStore } from "@/store/usePostStore";
 import { Post } from "@/types/post";
 import PostCard from "@/components/PostCard";
 
 type PostsListProps = {
   initialPosts: Post[];
+  errorMessage: string | null;
+  errorCode: number | null;
 };
 
-export default function PostsList({ initialPosts }: PostsListProps) {
-  const { posts, setPosts } = usePostStore(); 
+export default function PostsList({ initialPosts, errorMessage, errorCode }: PostsListProps) {
+  const { posts, setPosts } = usePostStore();
+  const [error, setError] = useState<{ message: string; code: number } | null>(null);
 
   useEffect(() => {
-    if (Object.keys(posts).length === 0) {
+    if (initialPosts.length > 0 && Object.keys(posts).length === 0) {
       setPosts(initialPosts);
     }
-  }, [initialPosts, posts, setPosts]);
+
+    if (errorMessage) {
+      setError({ message: errorMessage, code: errorCode || 500 });
+    }
+  }, [initialPosts, posts, setPosts, errorMessage, errorCode]);
 
   const sortedPosts = Object.values(posts).sort((a, b) => b.id - a.id);
+
+  if (error) {
+    return (
+      <div className="bg-red-500 text-white p-4 rounded">
+        <p>{error.message}</p>
+        <p>Error number: {error.code}</p>
+      </div>
+    );
+  }
 
   return (
     <>
