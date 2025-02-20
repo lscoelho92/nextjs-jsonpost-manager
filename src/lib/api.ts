@@ -5,7 +5,7 @@ const simulateDelay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function getPosts(): Promise<Post[]> {
-  const res = await fetch("https://jsonplaceholder.typicode.com/postsssss");
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
   await simulateDelay(2000);
   if (!res.ok) {
     throw new Error(`HTTP error! status: ${res.status}`);
