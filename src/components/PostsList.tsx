@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { usePostStore } from "@/store/usePostStore";
 import { Post } from "@/types/post";
 import PostCard from "@/components/PostCard";
@@ -13,28 +12,18 @@ type PostsListProps = {
 
 export default function PostsList({ initialPosts, errorMessage, errorCode }: PostsListProps) {
   const { posts, setPosts } = usePostStore();
-  const [error, setError] = useState<{ message: string; code: number } | null>(null);
 
-  useEffect(() => {
-    if (initialPosts.length > 0 && Object.keys(posts).length === 0) {
-      setPosts(initialPosts);
-    }
-  }, [initialPosts, posts, setPosts]);
-  
-  useEffect(() => {
-    if (errorMessage) {
-      setError({ message: errorMessage, code: errorCode || 500 });
-    }
-  }, [errorMessage, errorCode]);
-  
+  if (initialPosts.length > 0 && Object.keys(posts).length === 0) {
+    setPosts(initialPosts);
+  }
 
   const sortedPosts = Object.values(posts).sort((a, b) => b.id - a.id);
 
-  if (error) {
+  if (errorMessage) {
     return (
       <div role="alert" className="bg-red-500 text-white p-4 rounded">
-        <p>{error.message}</p>
-        <p>Error number: {error.code}</p>
+        <p>{errorMessage}</p>
+        <p>Error number: {errorCode}</p>
       </div>
     );
   }
