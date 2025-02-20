@@ -9,9 +9,11 @@ import Loader from "@/components/Loader";
 
 type PostPageProps = {
   id: string;
+  errorMessage?: string | null;
+  errorCode?: number | null;
 };
 
-export default function PostPageClient({ id }: PostPageProps) {
+export default function PostPageClient({ id, errorMessage, errorCode }: PostPageProps) {
   const { posts } = usePostStore();
   const router = useRouter();
   const [post, setPost] = useState<Post | null>(null);
@@ -23,6 +25,12 @@ export default function PostPageClient({ id }: PostPageProps) {
 
   useEffect(() => {
     setIsLoading(true);
+
+    if (errorMessage && errorCode) {
+      // If there's an error, skip loading and display the error
+      setIsLoading(false);
+      return;
+    }
 
     if (!isNewPost && !isDeleted) {
       const postId = Number(id);
@@ -40,7 +48,7 @@ export default function PostPageClient({ id }: PostPageProps) {
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [id, isNewPost, posts, router, isDeleted]);
+  }, [id, isNewPost, posts, router, isDeleted, errorMessage, errorCode]);
 
   const handleDeleteClick = () => {
     setIsModalOpen(true);
@@ -61,19 +69,27 @@ export default function PostPageClient({ id }: PostPageProps) {
 
   return (
     <main className="max-w-lg mx-auto p-6">
-
       {isLoading ? (
         <Loader />
       ) : (
         <>
-          <h1 className="text-2xl font-bold mb-4">
-            {isNewPost ? "Create New Post" : "Edit Post"}
-          </h1>
-          <PostForm 
-            initialPost={post ?? { id: 0, title: "", body: "" }} 
-            isNewPost={isNewPost} 
-            onDelete={handleDeleteClick}
-          />
+          {errorMessage && errorCode ? (
+            <div>
+              <p>{errorMessage}</p>
+              <p>Error number: {errorCode}</p>
+            </div>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold mb-4">
+                {isNewPost ? "Create New Post" : "Edit Post"}
+              </h1>
+              <PostForm 
+                initialPost={post ?? { id: 0, title: "", body: "" }} 
+                isNewPost={isNewPost} 
+                onDelete={handleDeleteClick}
+              />
+            </>
+          )}
         </>
       )}
 
