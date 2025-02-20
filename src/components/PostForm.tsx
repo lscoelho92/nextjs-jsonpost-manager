@@ -87,7 +87,7 @@ export default function PostForm({ initialPost, isNewPost, onDelete }: PostFormP
           </button>
         )
         }
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+        <button type="submit" className="px-4 py-2 bg-white text-black border-2 border-primary rounded hover:bg-stone-100">
           {isNewPost ? "Create Post" : "Update Post"}
         </button>
       </div>

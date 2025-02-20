@@ -22,7 +22,7 @@ export default function Header() {
               </Link>
             </li>
           ) : (
-            <Link href="/" className="text-blue-500 hover:underline">
+            <Link href="/" className="text-black py-2 px-4  border-2 border-primary rounded hover:bg-stone-100">
               Return to Homepage
             </Link>
           )

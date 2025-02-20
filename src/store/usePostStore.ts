@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { Post } from "@/types/post";
 
-interface PostStore {
+export interface PostStore {
   posts: Record<number, Post>;
   lastId: number;
   setPosts: (posts: Post[]) => void;

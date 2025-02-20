@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import PostPageClient from "@/components/PostPageClient";
 import { usePostStore } from "@/store/usePostStore";
-import { useRouter } from "next/navigation";
+import { useRouter, notFound } from "next/navigation";
 
 jest.mock("@/store/usePostStore", () => ({
   usePostStore: jest.fn(),
@@ -9,6 +9,9 @@ jest.mock("@/store/usePostStore", () => ({
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
+  notFound: jest.fn(() => {
+    throw new Error("NEXT_NOT_FOUND");
+  }),
 }));
 
 describe("PostPageClient", () => {
@@ -50,6 +53,23 @@ describe("PostPageClient", () => {
     expect(screen.getByText("Create New Post")).toBeInTheDocument();
   });
 
+  it("should call notFound() when the post does not exist", async () => {
+    (usePostStore as unknown as jest.Mock).mockReturnValue({
+      posts: {},
+      setPosts: jest.fn(),
+      deletePost: jest.fn(),
+      getState: jest.fn(() => ({ posts: {} })),
+    });
+
+    try {
+      render(<PostPageClient id="2" />);
+    } catch (error) {
+      expect(error.message).toBe("NEXT_NOT_FOUND");
+    }
+
+    expect(notFound).toHaveBeenCalled();
+  });
+
   it("should delete the post when confirmed", async () => {
     const mockPost = { id: 1, title: "Test Post", body: "Test Body" };
     const deletePostMock = jest.fn();
@@ -64,7 +84,6 @@ describe("PostPageClient", () => {
     (usePostStore as any).getState = jest.fn(() => ({
       deletePost: deletePostMock,
     }));
-
 
     (useRouter as jest.Mock).mockReturnValue({
       push: localMockPush,

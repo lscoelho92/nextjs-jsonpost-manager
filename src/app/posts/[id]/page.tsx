@@ -7,8 +7,7 @@ type PostPageProps = {
 // Server Component
 export default async function PostPage({ params }: PostPageProps) {
   const resolvedParams = await params;
-
   return (
-    <PostPageClient id={resolvedParams.id} />
+    <PostPageClient id={resolvedParams.id } />
   );
 }
