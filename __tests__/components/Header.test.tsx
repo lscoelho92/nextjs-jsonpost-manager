@@ -26,6 +26,6 @@ describe('Header', () => {
   it('should render the title correctly', () => {
     render(<Header />);
 
-    expect(screen.getByText('Next Posts Manager')).toBeInTheDocument();
+    expect(screen.getByText('AnyDesk Posts Manager')).toBeInTheDocument();
   });
 });

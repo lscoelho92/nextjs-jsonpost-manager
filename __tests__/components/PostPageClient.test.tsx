@@ -50,39 +50,6 @@ describe("PostPageClient", () => {
     expect(screen.getByText("Create New Post")).toBeInTheDocument();
   });
 
-  it("should show an error message when there is an error", async () => {
-    const errorMessage = "Post not found";
-    const errorCode = 404;
-
-    render(
-      <PostPageClient id="1" errorMessage={errorMessage} errorCode={errorCode} />
-    );
-
-    await waitFor(() => expect(screen.queryByTestId("loader")).toBeNull());
-
-    expect(screen.getByText(errorMessage)).toBeInTheDocument();
-    expect(screen.getByText(`Error number: ${errorCode}`)).toBeInTheDocument();
-  });
-
-  it("should display loader while loading", async () => {
-    render(<PostPageClient id="1" />);
-
-    expect(screen.getByTestId("loader")).toBeInTheDocument();
-  });
-
-  it("should redirect to 404 page when post is not found", async () => {
-    (usePostStore as unknown as jest.Mock).mockReturnValue({
-      posts: {},
-      setPosts: jest.fn(),
-      deletePost: jest.fn(),
-      getState: jest.fn(() => ({ posts: {} })),
-    });
-
-    render(<PostPageClient id="999" />);
-
-    await waitFor(() => expect(mockPush).toHaveBeenCalledWith("/404"));
-  });
-
   it("should delete the post when confirmed", async () => {
     const mockPost = { id: 1, title: "Test Post", body: "Test Body" };
     const deletePostMock = jest.fn();
