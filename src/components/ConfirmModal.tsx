@@ -13,8 +13,8 @@ export default function ConfirmModal({ isOpen, onCancel, onConfirm }: ConfirmMod
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
-        <p>Are you sure you want to delete this post?</p>
-        <div className="mt-4 flex justify-end space-x-2">
+        <p className="my-10">Are you sure you want to delete this post?</p>
+        <div className="mt-4 flex justify-end gap-4 space-x-2">
           <button
             onClick={onCancel}
             data-testid="cancel-delete-button"

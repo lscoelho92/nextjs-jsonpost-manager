@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from 'next/image'
 
 export default function Header() {
   const pathname = usePathname();
@@ -27,7 +28,15 @@ export default function Header() {
           )
           }
         </ul>
-        <h1 className="text-black text-2xl font-bold">Next Posts Manager</h1>
+        <div className="flex items-center gap-4">
+          <Image
+            src="/logo.png"
+            width={50}
+            height={50}
+            alt="Picture of the author"
+          />
+          <h1 className="text-black text-2xl font-bold">AnyDesk Posts Manager</h1>
+        </div>
       </nav>
     </header>
   );
