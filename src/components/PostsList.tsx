@@ -39,11 +39,18 @@ export default function PostsList({ initialPosts, errorMessage, errorCode }: Pos
   return (
     <>
       <h1 className="text-3xl font-bold mb-6">Posts ({Object.keys(posts).length})</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-        {sortedPosts.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
-      </div>
+
+      {Object.keys(posts).length === 0 ? (
+        <p className="text-gray-600 font-bold italic">
+          There are no registered posts. Please enter a new Post to be displayed in the list.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+          {sortedPosts.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
+        </div>
+      )}
     </>
   );
 }

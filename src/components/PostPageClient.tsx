@@ -5,7 +5,7 @@ import { Post } from "@/types/post";
 import { useRouter } from "next/navigation";
 import PostForm from "@/components/PostForm";
 import ConfirmModal from "@/components/ConfirmModal";
-import Loader from "@/components/Loader"; // Importando o Loader
+import Loader from "@/components/Loader";
 
 type PostPageProps = {
   id: string;
