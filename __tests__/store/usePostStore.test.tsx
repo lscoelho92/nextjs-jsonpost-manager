@@ -2,7 +2,6 @@ import { usePostStore } from '@/store/usePostStore';
 import { Post } from '@/types/post';
 
 describe('usePostStore', () => {
-  // Reseta o estado da store antes de cada teste para garantir testes isolados
   beforeEach(() => {
     usePostStore.setState({ posts: {}, lastId: 0 });
   });
@@ -25,7 +24,7 @@ describe('usePostStore', () => {
     expect(Object.keys(posts).length).toBe(2);
     expect(posts[1].title).toBe('Post 1');
     expect(posts[2].title).toBe('Post 2');
-    expect(lastId).toBe(2);  // O maior id dentre os posts é 2
+    expect(lastId).toBe(2);
   });
 
   it('should set posts correctly when given an empty array', () => {
@@ -40,16 +39,15 @@ describe('usePostStore', () => {
     usePostStore.getState().addPost(newPost);
     
     const { posts, lastId } = usePostStore.getState();
-    // Como o estado foi resetado, o novo id deve ser 1
+
     expect(lastId).toBe(1);
     expect(posts[1].title).toBe('New Post');
     expect(posts[1].body).toBe('New body');
   });
 
   it('should update a post correctly', () => {
-    // Adiciona um post primeiro
     usePostStore.getState().addPost({ id: 0, title: 'Original Post', body: 'Body' });
-    // Atualiza o post com id 1
+
     usePostStore.getState().updatePost(1, { title: 'Updated Post' });
     
     const { posts } = usePostStore.getState();
@@ -57,9 +55,7 @@ describe('usePostStore', () => {
   });
 
   it('should delete a post correctly', () => {
-    // Adiciona um post primeiro
     usePostStore.getState().addPost({ id: 0, title: 'Post to delete', body: 'Body' });
-    // Deleta o post com id 1
     usePostStore.getState().deletePost(1);
     
     const { posts } = usePostStore.getState();

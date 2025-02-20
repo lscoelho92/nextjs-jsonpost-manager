@@ -29,7 +29,6 @@ describe("PostsList", () => {
   });
 
   it("should render the correct number of PostCards when posts are present", () => {
-    // Fornecendo os posts como objeto, conforme o componente espera
     const postsObject: { [key: number]: Post } = {
       1: { id: 1, title: "Post 1", body: "Body 1" },
       2: { id: 2, title: "Post 2", body: "Body 2" },
@@ -43,7 +42,6 @@ describe("PostsList", () => {
       <PostsList initialPosts={[]} errorMessage={null} errorCode={null} />
     );
 
-    // Assume que cada PostCard renderiza um elemento com role "link"
     const postCards = screen.getAllByRole("link");
     expect(postCards.length).toBe(Object.keys(postsObject).length);
   });
@@ -65,7 +63,7 @@ describe("PostsList", () => {
 
     const postCards = screen.getAllByRole("link");
     expect(postCards).toHaveLength(3);
-    // Ordenação decrescente: o primeiro deve exibir "Post 3", depois "Post 2" e, por fim, "Post 1"
+    
     expect(postCards[0]).toHaveTextContent("Post 3");
     expect(postCards[1]).toHaveTextContent("Post 2");
     expect(postCards[2]).toHaveTextContent("Post 1");

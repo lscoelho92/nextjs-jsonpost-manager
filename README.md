@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Name
 
-## Getting Started
+## Overview
+This project is a simple post management application built with Next.js, TypeScript, Zustand for state management, and Tailwind CSS for styling. It fetches posts from the [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) and allows users to view posts dynamically.
 
-First, run the development server:
+## Features
+- Fetch and display posts from JSONPlaceholder.
+- State management handled with Zustand.
+- Dynamic rendering of posts.
+- Basic error handling.
+- Responsive design using Tailwind CSS.
+- Unit tests using Jest and React Testing Library.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Main Files & Structure
+```
+/src
+ ├── components
+ │   ├── ConfirmModal.tsx      # Confirmation modal component
+ │   ├── Header.tsx            # Header component
+ │   ├── Loader.tsx            # Loader component
+ │   ├── PostCard.tsx          # Individual post display component
+ │   ├── PostForm.tsx          # Form for creating and editing posts
+ │   ├── PostPageClient.tsx    # Client-side rendering for posts page
+ │   ├── PostsList.tsx         # List of posts component
+ │
+ ├── lib
+ │   ├── api.ts                # API handling functions
+ │
+ ├── store
+ │   ├── usePostStore.ts       # Zustand store for post management
+ │
+ ├── types
+ │   ├── post.ts               # TypeScript types for posts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup & Installation
+```sh
+git clone <repository-url>
+cd <project-folder>
+npm install
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Points for Improvement
+- **API Integration**: Currently, state management simulates API operations. Ideally, the API should support post creation, editing, and deletion directly, reducing the need for Zustand.
+- **UI/UX Enhancements**: The project uses default Next.js and Tailwind CSS styles. A dedicated layout and improved design would enhance the user experience.
+- **State Management Optimization**: Some components use multiple `useState` hooks, making the code less readable. A better state management library could simplify this.
+- **Performance & SEO**: Further optimizations could improve both performance and SEO rankings.
+- **Use of Images & Icons**: Currently, minimal effort has been put into the visual aspects. Adding better images and icons would improve the application's appearance.
+- **Testing Improvements**: Tests were written quickly, relying on text-based selectors. They should be refined to use more robust selection strategies for better maintainability.
