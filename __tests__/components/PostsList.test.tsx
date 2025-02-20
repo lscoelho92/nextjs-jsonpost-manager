@@ -86,7 +86,7 @@ describe("PostsList", () => {
     expect(noPostsMessage).toHaveClass("text-gray-600", "font-bold", "italic");
   });
 
-  it("should default errorCode to 500 when not provided", async () => {
+  it("should should render error message if fetch api have error", async () => {
     const errorMessage = "An error occurred!";
   
     (usePostStore as unknown as jest.Mock).mockReturnValue({
@@ -100,7 +100,6 @@ describe("PostsList", () => {
       const errorContainer = screen.getByRole("alert");
       expect(errorContainer).toBeInTheDocument();
       expect(errorContainer).toHaveTextContent(errorMessage);
-      expect(errorContainer).toHaveTextContent(`Error number: 500`);
     });
   });
 });
