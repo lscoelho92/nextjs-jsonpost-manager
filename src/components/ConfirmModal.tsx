@@ -18,7 +18,7 @@ export default function ConfirmModal({ isOpen, onCancel, onConfirm }: ConfirmMod
           <button
             onClick={onCancel}
             data-testid="cancel-delete-button"
-            className="px-4 py-2 bg-gray-300 rounded"
+            className="px-4 py-2 bg-white border-2 border-primary rounded hover:bg-stone-100"
           >
             Cancel
           </button>

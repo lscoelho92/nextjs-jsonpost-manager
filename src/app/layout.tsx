@@ -49,11 +49,11 @@ export default function RootLayout({
           <footer className="bg-black text-white p-4">
             <div className="container mx-auto text-center text-sm">
               <p className="font-light italic">
-                Developed by:&nbsp;
-                <Link href="https://www.linkedin.com/in/lscoelho/" target="_blank" className="text-white font-bold hover:underline">
+                Developed by
+                <Link href="https://www.linkedin.com/in/lscoelho/" target="_blank" className="text-white font-bold hover:underline mx-1">
                   Leonardo Soares Coelho
                 </Link>
-                &nbsp;for AnyDesk testing, is strictly for internal use. 
+                for AnyDesk testing, is strictly for internal use. 
               </p>
               <p className="font-light italic">
                 Unauthorized use or distribution is prohibited. AnyDesk is not liable.
