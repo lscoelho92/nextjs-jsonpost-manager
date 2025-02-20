@@ -1,4 +1,4 @@
-# Project Name
+# Anydesk Posts Manager
 
 ## Overview
 This project is a simple post management application built with Next.js, TypeScript, Zustand for state management, and Tailwind CSS for styling. It fetches posts from the [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) and allows users to view posts dynamically.
@@ -39,6 +39,11 @@ git clone <repository-url>
 cd <project-folder>
 npm install
 npm run dev
+```
+
+## Tests
+```sh
+npm test
 ```
 
 ## Points for Improvement
