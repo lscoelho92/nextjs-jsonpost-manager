@@ -42,7 +42,7 @@ npm run dev
 ```
 
 ## Points for Improvement
-- **API Integration**: Currently, state management simulates API operations. Ideally, the API should support post creation, editing, and deletion directly, reducing the need for Zustand.
+- **API Integration**: Currently, state management simulates API operations. Ideally, the API should support post creation, editing, and deletion directly, removing the need for Zustand.
 - **UI/UX Enhancements**: The project uses default Next.js and Tailwind CSS styles. A dedicated layout and improved design would enhance the user experience.
 - **State Management Optimization**: Some components use multiple `useState` hooks, making the code less readable. A better state management library could simplify this.
 - **Performance & SEO**: Further optimizations could improve both performance and SEO rankings.
