@@ -42,6 +42,9 @@ npm run dev
 ```
 
 ## Tests
+This project uses Jest to test the application.
+
+The coverage of all tests can be checked using the command:
 ```sh
 npm test
 ```
