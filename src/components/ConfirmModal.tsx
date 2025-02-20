@@ -17,12 +17,14 @@ export default function ConfirmModal({ isOpen, onCancel, onConfirm }: ConfirmMod
         <div className="mt-4 flex justify-end space-x-2">
           <button
             onClick={onCancel}
+            data-testid="cancel-delete-button"
             className="px-4 py-2 bg-gray-300 rounded"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
+            data-testid="confirm-delete-button"
             className="px-4 py-2 bg-red-500 text-white rounded"
           >
             Delete

@@ -80,6 +80,7 @@ export default function PostForm({ initialPost, isNewPost, onDelete }: PostFormP
           <button
             type="button"
             onClick={onDelete}
+            data-testid="delete-button"
             className="px-4 py-2 bg-red-500 text-white rounded"
           >
             Delete

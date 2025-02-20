@@ -9,7 +9,7 @@ export default function Header() {
 
   return (
     <header className="border-b-2 px-8 py-6">
-      <nav className="container mx-auto flex justify-between items-center">
+      <nav className="container mx-auto flex flex-col-reverse justify-between items-center gap-6 sm:flex-row sm:gap-0">
         <ul className="flex space-x-4">
           {!isPostPage ? (
             <li>

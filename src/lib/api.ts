@@ -7,7 +7,9 @@ const simulateDelay = (ms: number) =>
 export async function getPosts(): Promise<Post[]> {
   const res = await fetch("https://jsonplaceholder.typicode.com/posts");
   await simulateDelay(2000);
-  if (!res.ok) throw new Error("Error when searching for posts");
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
   return res.json();
 }
 
