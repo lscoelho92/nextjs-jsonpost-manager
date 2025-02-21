@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import PostPageClient from "@/components/PostPageClient";
 import { usePostStore } from "@/store/usePostStore";
 import { useRouter, notFound } from "next/navigation";
@@ -14,6 +14,51 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
+jest.mock("@/components/PostForm", () => {
+  const PostFormMock = (props: any) => {
+    return (
+      <div>
+        <input
+          data-testid="title-input"
+          value={props.initialPost?.title || ""}
+          readOnly
+        />
+        <textarea
+          data-testid="body-textarea"
+          value={props.initialPost?.body || ""}
+          readOnly
+        />
+        {!props.isNewPost && (
+          <button data-testid="delete-button" onClick={props.onDelete}>
+            Delete
+          </button>
+        )}
+      </div>
+    );
+  };
+  PostFormMock.displayName = "PostForm";
+  return PostFormMock;
+});
+
+jest.mock("@/components/ConfirmModal", () => {
+  const ConfirmModalMock = (props: any) => {
+    if (!props.isOpen) return null;
+    return (
+      <div>
+        <p>Are you sure you want to delete this post?</p>
+        <button data-testid="confirm-delete-button" onClick={props.onConfirm}>
+          Confirm
+        </button>
+        <button data-testid="cancel-delete-button" onClick={props.onCancel}>
+          Cancel
+        </button>
+      </div>
+    );
+  };
+  ConfirmModalMock.displayName = "ConfirmModal";
+  return ConfirmModalMock;
+});
+
 describe("PostPageClient", () => {
   let mockPush: jest.Mock;
 
@@ -22,110 +67,89 @@ describe("PostPageClient", () => {
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
   });
 
-  it("should render the post content for an existing post", async () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("should render the post content for an existing post", () => {
     const mockPost = { id: 1, title: "Test Post", body: "Test Body" };
 
     (usePostStore as unknown as jest.Mock).mockReturnValue({
       posts: { 1: mockPost },
-      setPosts: jest.fn(),
       deletePost: jest.fn(),
-      getState: jest.fn(() => ({ posts: { 1: mockPost } })),
     });
 
-    render(<PostPageClient id="1" />);
+    render(<PostPageClient id="1" initialPost={mockPost} />);
 
-    await waitFor(() => expect(screen.queryByTestId("loader")).toBeNull());
-
-    const titleInput = screen.getByDisplayValue("Test Post") as HTMLInputElement;
-    expect(titleInput).toBeInTheDocument();
-
-    const bodyTextarea = screen.getByDisplayValue("Test Body") as HTMLTextAreaElement;
-    expect(bodyTextarea).toBeInTheDocument();
-
+    expect(screen.getByTestId("title-input")).toHaveValue("Test Post");
+    expect(screen.getByTestId("body-textarea")).toHaveValue("Test Body");
     expect(screen.getByText("Edit Post")).toBeInTheDocument();
   });
 
-  it("should render the create new post form", async () => {
-    render(<PostPageClient id="new" />);
+  it("should render the create new post form", () => {
+    (usePostStore as unknown as jest.Mock).mockReturnValue({
+      posts: {},
+      deletePost: jest.fn(),
+    });
 
-    await waitFor(() => expect(screen.queryByTestId("loader")).toBeNull());
+    render(<PostPageClient id="new" initialPost={null} />);
 
     expect(screen.getByText("Create New Post")).toBeInTheDocument();
   });
 
-  it("should call notFound() when the post does not exist", async () => {
+  it("should call notFound() when the post does not exist", () => {
     (usePostStore as unknown as jest.Mock).mockReturnValue({
       posts: {},
-      setPosts: jest.fn(),
       deletePost: jest.fn(),
-      getState: jest.fn(() => ({ posts: {} })),
     });
 
-    try {
-      render(<PostPageClient id="2" />);
-    } catch (error) {
-      expect(error.message).toBe("NEXT_NOT_FOUND");
-    }
-
+    expect(() => render(<PostPageClient id="0" initialPost={null} />)).toThrow(
+      "NEXT_NOT_FOUND"
+    );
     expect(notFound).toHaveBeenCalled();
   });
 
-  it("should delete the post when confirmed", async () => {
+  it("should delete the post when confirmed", () => {
     const mockPost = { id: 1, title: "Test Post", body: "Test Body" };
     const deletePostMock = jest.fn();
-    const localMockPush = jest.fn();
 
     (usePostStore as unknown as jest.Mock).mockReturnValue({
       posts: { 1: mockPost },
-      setPosts: jest.fn(),
-      deletePost: jest.fn(),
-    });
-
-    (usePostStore as any).getState = jest.fn(() => ({
       deletePost: deletePostMock,
-    }));
-
-    (useRouter as jest.Mock).mockReturnValue({
-      push: localMockPush,
     });
 
-    render(<PostPageClient id="1" />);
-
-    await waitFor(() => expect(screen.queryByTestId("loader")).toBeNull());
+    render(<PostPageClient id="1" initialPost={mockPost} />);
 
     fireEvent.click(screen.getByTestId("delete-button"));
-
-    await waitFor(() =>
-      expect(
-        screen.getByText("Are you sure you want to delete this post?")
-      ).toBeInTheDocument()
-    );
+    expect(
+      screen.getByText("Are you sure you want to delete this post?")
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("confirm-delete-button"));
 
     expect(deletePostMock).toHaveBeenCalledTimes(1);
     expect(deletePostMock).toHaveBeenCalledWith(mockPost.id);
-
-    expect(localMockPush).toHaveBeenCalledWith("/");
+    expect(mockPush).toHaveBeenCalledWith("/");
   });
 
-  it("should cancel the deletion when cancel is clicked", async () => {
-    render(<PostPageClient id="1" />);
+  it("should cancel the deletion when cancel is clicked", () => {
+    const mockPost = { id: 1, title: "Test Post", body: "Test Body" };
 
-    await waitFor(() => expect(screen.queryByTestId("loader")).toBeNull());
+    (usePostStore as unknown as jest.Mock).mockReturnValue({
+      posts: { 1: mockPost },
+      deletePost: jest.fn(),
+    });
+
+    render(<PostPageClient id="1" initialPost={mockPost} />);
 
     fireEvent.click(screen.getByTestId("delete-button"));
-
-    await waitFor(() =>
-      expect(
-        screen.getByText("Are you sure you want to delete this post?")
-      ).toBeInTheDocument()
-    );
+    expect(
+      screen.getByText("Are you sure you want to delete this post?")
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("cancel-delete-button"));
-
     expect(
       screen.queryByText("Are you sure you want to delete this post?")
-    ).not.toBeInTheDocument();
+    ).toBeNull();
   });
 });
